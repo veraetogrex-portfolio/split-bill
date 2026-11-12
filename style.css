@@ -1,0 +1,102 @@
+/* Split the Bill — github.com/veraetogrex-portfolio · zero dependencies */
+:root {
+  --bg: #07080c;
+  --panel: #0b0c12;
+  --text: #f2f3f7;
+  --text-2: #a4a7b6;
+  --text-3: #7f8293;
+  --line: rgba(255, 255, 255, .08);
+  --line-2: rgba(255, 255, 255, .14);
+  --pulse: #7c6cff;
+  --pulse-btn: #6a5af9;
+  --ion: #3fe0d0;
+  --ana: #a69bff;
+  --max: #ff6fb5;
+  --kai: #ffb547;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --display: var(--font);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(65% 60% at 50% 45%, #0e1018, var(--bg) 72%);
+  color: var(--text); font: 16px/1.4 var(--font);
+}
+h1, h2, p { margin: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+.sb { position: relative; width: 1180px; height: 720px; user-select: none; }
+@media (max-width: 1240px) { .sb { zoom: .8; } }
+@media (max-width: 960px)  { .sb { zoom: .6; } }
+@media (max-width: 720px)  { .sb { zoom: .3; } }
+
+/* ── header ─────────────────────────────────────────── */
+.sb-top { height: 96px; }
+.sb-title { font: 700 48px/1 var(--display); letter-spacing: .04em; text-transform: uppercase; }
+.sb-rules { margin-top: 14px; display: flex; align-items: center; gap: 10px; font: 500 15px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--text-3); }
+.sb-rules span { margin-right: 6px; color: var(--kai); }
+.sb-rules b { padding: 5px 12px; border-radius: 8px; font-weight: 500; color: var(--text-2); box-shadow: 0 0 0 1px var(--line-2) inset; }
+
+.sb-panel {
+  position: absolute; top: 112px; height: 500px; border-radius: 24px;
+  background: radial-gradient(80% 90% at 50% 20%, #10121b, var(--panel));
+  box-shadow: 0 0 0 1px var(--line) inset, 0 50px 110px -40px rgba(0, 0, 0, .9);
+}
+
+/* ── receipt ────────────────────────────────────────── */
+.sb-receipt { left: 0; width: 660px; padding: 26px 32px; }
+.sb-place { display: flex; justify-content: space-between; font: 500 15px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--text-3); }
+.sb-lines { margin-top: 14px; }
+.sb-line { position: relative; padding: 11px 14px 13px; margin: 0 -14px; border-radius: 12px; transition: background .2s, box-shadow .2s; }
+.sb-line.is-target { background: rgba(255, 255, 255, .05); box-shadow: 0 0 0 2px var(--hl) inset; }
+.sb-row { display: flex; align-items: baseline; justify-content: space-between; }
+.sb-row b { font: 600 22px var(--font); }
+.sb-row b small { margin-left: 8px; font: 500 15px var(--mono); color: var(--text-3); }
+.sb-row em { font: 600 22px var(--mono); font-style: normal; font-variant-numeric: tabular-nums; }
+.sb-bar { position: relative; display: flex; gap: 3px; height: 8px; margin-top: 9px; border-radius: 4px; overflow: hidden; }
+.sb-bar::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .16) 0 6px, transparent 6px 12px); transition: opacity .3s; }
+.sb-bar.is-owned::before { opacity: 0; }
+.sb-bar i { flex: 0 1 0; min-width: 0; border-radius: 4px; transition: flex-grow .55s cubic-bezier(.34, 1.4, .64, 1); position: relative; }
+.sb-bar i.is-on { flex-grow: 1; }
+.sb-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 14px; border-top: 1px dashed var(--line-2); }
+.sb-total span { font: 600 15px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--text-2); }
+.sb-total b { font: 700 36px/1 var(--display); font-variant-numeric: tabular-nums; }
+.sb-rest { position: absolute; left: 30px; right: 30px; bottom: 22px; height: 56px; padding: 0 24px; border-radius: 12px; font: 600 18px var(--font); color: #fff;
+  background: var(--pulse-btn); box-shadow: 0 0 0 1px rgba(255, 255, 255, .12) inset, 0 10px 30px -10px rgba(124, 108, 255, .8); transition: opacity .3s, transform .3s; }
+.sb-rest:hover { background: #7d6eff; }
+.sb-rest[disabled] { opacity: .3; pointer-events: none; }
+
+/* ── people ─────────────────────────────────────────── */
+.sb-people { left: 692px; width: 488px; padding: 26px 30px; }
+.sb-people > p { font: 500 15px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--text-3); }
+.sb-person { display: flex; align-items: center; gap: 18px; height: 112px; border-bottom: 1px solid var(--line); }
+.sb-person:last-child { border-bottom: 0; }
+.sb-ava { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; flex: none; cursor: grab; touch-action: none;
+  font: 700 26px var(--display); color: #07080c; background: var(--c); box-shadow: 0 0 0 4px rgba(255, 255, 255, .06), 0 0 28px -6px var(--c); }
+.sb-who { flex: 1; }
+.sb-who b { display: block; font: 600 22px var(--font); }
+.sb-who span { font: 500 14px var(--mono); letter-spacing: .08em; color: var(--text-3); }
+.sb-owe { position: relative; height: 56px; min-width: 128px; padding: 0 18px; border-radius: 12px; display: flex; align-items: center; justify-content: flex-end; gap: 0;
+  font: 700 36px/1 var(--display); font-variant-numeric: tabular-nums; color: var(--c);
+  transition: background .45s, color .45s, box-shadow .45s, padding .45s; }
+.sb-owe small { margin-right: 0; font: 600 18px var(--font); max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .45s; }
+.sb.is-settled .sb-owe { background: var(--c); color: #07080c; padding: 0 22px; box-shadow: 0 12px 30px -12px var(--c); }
+.sb.is-settled .sb-owe small { max-width: 60px; margin-right: 10px; }
+
+.sb-ghost { position: absolute; z-index: 9; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; display: grid; place-items: center; pointer-events: none;
+  font: 700 26px var(--display); color: #07080c; background: var(--c); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .8), 0 0 40px var(--c); transform: scale(1.1); }
+.sb-coin { position: absolute; z-index: 8; width: 16px; height: 16px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 35% 35%, #fff4d6, #ffb547 55%, #c9821b); animation: sb-coin .9s cubic-bezier(.2, .8, .2, 1) forwards; }
+@keyframes sb-coin { from { transform: translate(0, 0) scale(.6); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
+
+/* ── verdict ────────────────────────────────────────── */
+.sb-verdict { position: absolute; left: 0; right: 0; top: 632px; height: 70px; text-align: center; }
+.sb-verdict > * { position: absolute; left: 0; right: 0; top: 0; transition: opacity .35s, transform .45s cubic-bezier(.34, 1.56, .64, 1); }
+.sb-caption { font: 500 30px var(--font); letter-spacing: -.01em; color: var(--text-2); line-height: 56px; }
+.sb-score { font: 700 54px/56px var(--display); letter-spacing: .02em; text-transform: uppercase; opacity: 0; transform: translateY(18px) scale(.94); }
+.sb-score .a { color: var(--text-3); margin: 0 14px; }
+.sb.is-settled .sb-caption { opacity: 0; transform: translateY(-14px); }
+.sb.is-settled .sb-score { opacity: 1; transform: none; }
+.sb.is-settled .sb-rest { opacity: 0; transform: translateY(10px); }

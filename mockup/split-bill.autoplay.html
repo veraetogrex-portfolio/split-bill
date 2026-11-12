@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T18 Split the Bill — drag friends onto what they had</title>
+<link rel="stylesheet" href="_shared/nocturne.css">
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* the component from source/, dressed in Nocturne type */
+  #stage{background:radial-gradient(ellipse 65% 60% at 50% 45%,#0E1018 0%,var(--void) 72%);
+    --font:var(--f-text);--mono:var(--f-mono);--display:var(--f-display)}
+  #stage .sb{position:absolute;left:130px;top:80px;zoom:1;z-index:1}
+  .halo{position:absolute;left:50%;top:44%;width:1300px;height:700px;margin:-350px 0 0 -650px;border-radius:50%;pointer-events:none;z-index:0;
+    background:radial-gradient(closest-side,rgba(255,181,71,.07),rgba(0,0,0,0))}
+
+</style>
+</head>
+<body>
+<div id="stage" class="grid" data-title="T18 Split the Bill" data-url="veraetogrex-portfolio.github.io/split-the-bill">
+  <div class="halo"></div>
+  <section class="sb" id="bill" aria-label="Split a receipt by dragging people onto lines">
+    <header class="sb-top">
+      <h1 class="sb-title">Split the bill</h1>
+      <p class="sb-rules"><span>Receipt</span><b>Drag people onto lines</b><b>Shared lines split evenly</b></p>
+    </header>
+
+    <div class="sb-panel sb-receipt">
+      <p class="sb-place"><span>Nori Bar · table 7</span><span>21:40</span></p>
+      <div class="sb-lines">
+          <div class="sb-line" data-i="0"><div class="sb-row"><b>Ramen<small>×2</small></b><em>$32</em></div><div class="sb-bar"><i data-p="ana" style="background:var(--ana)"></i><i data-p="max" style="background:var(--max)"></i><i data-p="kai" style="background:var(--kai)"></i></div></div>
+          <div class="sb-line" data-i="1"><div class="sb-row"><b>Gyoza<small></small></b><em>$9</em></div><div class="sb-bar"><i data-p="ana" style="background:var(--ana)"></i><i data-p="max" style="background:var(--max)"></i><i data-p="kai" style="background:var(--kai)"></i></div></div>
+          <div class="sb-line" data-i="2"><div class="sb-row"><b>Sake<small></small></b><em>$18</em></div><div class="sb-bar"><i data-p="ana" style="background:var(--ana)"></i><i data-p="max" style="background:var(--max)"></i><i data-p="kai" style="background:var(--kai)"></i></div></div>
+          <div class="sb-line" data-i="3"><div class="sb-row"><b>Matcha<small>×3</small></b><em>$15</em></div><div class="sb-bar"><i data-p="ana" style="background:var(--ana)"></i><i data-p="max" style="background:var(--max)"></i><i data-p="kai" style="background:var(--kai)"></i></div></div>
+          <div class="sb-line" data-i="4"><div class="sb-row"><b>Tip<small>12%</small></b><em>$12</em></div><div class="sb-bar"><i data-p="ana" style="background:var(--ana)"></i><i data-p="max" style="background:var(--max)"></i><i data-p="kai" style="background:var(--kai)"></i></div></div>
+      </div>
+      <div class="sb-total"><span>Total</span><b>$86</b></div>
+    </div>
+
+    <div class="sb-panel sb-people">
+      <p>Who had what</p>
+      <button class="sb-rest">Split the rest evenly</button>
+        <div class="sb-person" data-p="ana" style="--c:var(--ana)"><span class="sb-ava" data-p="ana" aria-label="Drag Ana onto a line">A</span><div class="sb-who"><b>Ana</b><span>you</span></div><span class="sb-owe"><small>Pay</small>$<b class="sb-sum">0</b></span></div>
+        <div class="sb-person" data-p="max" style="--c:var(--max)"><span class="sb-ava" data-p="max" aria-label="Drag Max onto a line">M</span><div class="sb-who"><b>Max</b><span>friend</span></div><span class="sb-owe"><small>Pay</small>$<b class="sb-sum">0</b></span></div>
+        <div class="sb-person" data-p="kai" style="--c:var(--kai)"><span class="sb-ava" data-p="kai" aria-label="Drag Kai onto a line">K</span><div class="sb-who"><b>Kai</b><span>friend</span></div><span class="sb-owe"><small>Pay</small>$<b class="sb-sum">0</b></span></div>
+    </div>
+
+    <div class="sb-verdict" role="status">
+      <p class="sb-caption">Drag a friend onto what they had.</p>
+      <p class="sb-score">$86<span class="a">→</span><span class="sb-parts"></span></p>
+    </div>
+  </section>
+  <div class="status-line"><span>Veraetogrex · T18</span><span>Receipt · split by line</span></div>
+</div>
+<script>window.AUTOPLAY = true;</script>
+<script src="_shared/stage.js"></script>
+<script src="../script.js"></script>
+<script>
+const sb = document.querySelector('#bill').bill;
+const onto = i => { const r = Stage.rect(sb.line(i)); return [r.x + r.w * .62, r.cy]; };
+Stage.init({
+  reset: () => sb.reset(),
+  cursorStart: [920, 480],                 // next to Max
+  async demo(s) {
+    const t0 = performance.now();
+    await s.drag(onto(0), 800, { from: sb.ava('max'), fromMs: 200, post: 120 });   // Max shares the ramen: 32 → 16 + 16
+    await s.drag(onto(2), 750, { from: sb.ava('kai'), fromMs: 380, post: 120 });   // Kai had the sake
+    await s.click(sb.rest, { ms: 480 });   // the rest splits three ways, then Pay buttons
+    await s.until(t0, 5800);
+    sb.reset();                            // back to the first frame
+    await s.until(t0, 6400);
+  },
+});
+</script>
+</body>
+</html>
